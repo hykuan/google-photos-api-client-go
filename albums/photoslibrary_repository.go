@@ -88,7 +88,7 @@ func (r PhotosLibraryAlbumsRepository) Get(ctx context.Context, albumId string) 
 // ListAll fetches and caches all the albums from the repo.
 func (r PhotosLibraryAlbumsRepository) ListAll(ctx context.Context) ([]Album, error) {
 	albumsResult := make([]Album, 0)
-	err := r.service.List().ExcludeNonAppCreatedData().Pages(ctx, func(response *photoslibrary.ListAlbumsResponse) error {
+	err := r.service.List().Pages(ctx, func(response *photoslibrary.ListAlbumsResponse) error {
 		for _, res := range response.Albums {
 			albumsResult = append(albumsResult, toAlbum(res))
 		}
