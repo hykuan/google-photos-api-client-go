@@ -99,7 +99,8 @@ func (r PhotosLibraryMediaItemsRepository) Get(ctx context.Context, mediaItemId 
 // ListByAlbum list all media items in the specified album.
 func (r PhotosLibraryMediaItemsRepository) ListByAlbum(ctx context.Context, albumId string) ([]MediaItem, error) {
 	req := &photoslibrary.SearchMediaItemsRequest{
-		AlbumId: albumId,
+		AlbumId:  albumId,
+		PageSize: 100,
 	}
 
 	photosMediaItems := make([]*photoslibrary.MediaItem, 0)
