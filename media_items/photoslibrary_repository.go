@@ -120,6 +120,28 @@ func (r PhotosLibraryMediaItemsRepository) ListByAlbum(ctx context.Context, albu
 	return mediaItems, nil
 }
 
+// ListAlbumByPageToken list all media items in the specified album with pageToken.
+func (r PhotosLibraryMediaItemsRepository) ListAlbumByPageToken(ctx context.Context, albumId string, pageToken string) (string, []MediaItem, error) {
+	req := &photoslibrary.SearchMediaItemsRequest{
+		AlbumId:   albumId,
+		PageToken: pageToken,
+		PageSize:  100,
+	}
+
+	searchCall := r.service.Search(req)
+	searchCall.Context(ctx)
+
+	if resp, err := searchCall.Do(); err != nil {
+		return "", nil, err
+	} else {
+		mediaItems := make([]MediaItem, len(resp.MediaItems))
+		for i, item := range resp.MediaItems {
+			mediaItems[i] = toMediaItem(item)
+		}
+		return resp.NextPageToken, mediaItems, nil
+	}
+}
+
 // toMediaItem transforms a `photoslibrary.MediaItem` into a `MediaItem`.
 func toMediaItem(item *photoslibrary.MediaItem) MediaItem {
 	return MediaItem{

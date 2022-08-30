@@ -12,6 +12,7 @@ type Repository interface {
 	CreateManyToAlbum(ctx context.Context, albumId string, mediaItems []SimpleMediaItem) ([]MediaItem, error)
 	Get(ctx context.Context, itemId string) (*MediaItem, error)
 	ListByAlbum(ctx context.Context, albumId string) ([]MediaItem, error)
+	ListAlbumByPageToken(ctx context.Context, albumId string, pageToken string) (string, []MediaItem, error)
 }
 
 // HttpMediaItemsService implements a media items Google Photos client.
@@ -74,6 +75,11 @@ func (ms HttpMediaItemsService) Get(ctx context.Context, mediaItemId string) (*M
 // ListByAlbum list all media items in the specified album.
 func (ms HttpMediaItemsService) ListByAlbum(ctx context.Context, albumId string) ([]MediaItem, error) {
 	return ms.repo.ListByAlbum(ctx, albumId)
+}
+
+// ListAlbumByPageToken list all media items in the specified album with pageToken.
+func (ms HttpMediaItemsService) ListAlbumByPageToken(ctx context.Context, albumId string, pageToken string) (string, []MediaItem, error) {
+	return ms.repo.ListAlbumByPageToken(ctx, albumId, pageToken)
 }
 
 // NewHttpMediaItemsService returns a media items Google Photos client.

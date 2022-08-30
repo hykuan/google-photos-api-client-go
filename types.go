@@ -46,10 +46,10 @@ type MediaItemsService interface {
 	CreateManyToAlbum(ctx context.Context, albumId string, mediaItems []media_items.SimpleMediaItem) ([]media_items.MediaItem, error)
 	Get(ctx context.Context, mediaItemId string) (*media_items.MediaItem, error)
 	ListByAlbum(ctx context.Context, albumId string) ([]media_items.MediaItem, error)
+	ListAlbumByPageToken(ctx context.Context, albumId string, pageToken string) (string, []media_items.MediaItem, error)
 }
 
 // MediaUploader represents a Google Photos client fo media upload.
 type MediaUploader interface {
 	UploadFile(ctx context.Context, filePath string) (uploadToken string, err error)
 }
-
