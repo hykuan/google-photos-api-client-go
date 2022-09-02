@@ -86,7 +86,7 @@ func (r PhotosLibraryMediaItemsRepository) CreateManyToAlbum(ctx context.Context
 // Get returns the media item specified based on a given media item id.
 func (r PhotosLibraryMediaItemsRepository) Get(ctx context.Context, mediaItemId string) (*MediaItem, error) {
 	result, err := r.service.Get(mediaItemId).Context(ctx).Do()
-	if err != nil && err.(*googleapi.Error).Code == http.StatusNotFound {
+	if err != nil {
 		if googleAPIError, ok := err.(*googleapi.Error); ok && googleAPIError.Code == http.StatusNotFound {
 			return &MediaItem{}, ErrNotFound
 		} else {
