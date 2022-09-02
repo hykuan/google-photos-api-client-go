@@ -87,10 +87,11 @@ func (r PhotosLibraryMediaItemsRepository) CreateManyToAlbum(ctx context.Context
 func (r PhotosLibraryMediaItemsRepository) Get(ctx context.Context, mediaItemId string) (*MediaItem, error) {
 	result, err := r.service.Get(mediaItemId).Context(ctx).Do()
 	if err != nil && err.(*googleapi.Error).Code == http.StatusNotFound {
-		return &MediaItem{}, ErrNotFound
-	}
-	if err != nil {
-		return &MediaItem{}, ErrServerFailed
+		if googleAPIError, ok := err.(*googleapi.Error); ok && googleAPIError.Code == http.StatusNotFound {
+			return &MediaItem{}, ErrNotFound
+		} else {
+			return &MediaItem{}, ErrServerFailed
+		}
 	}
 	m := toMediaItem(result)
 	return &m, nil
