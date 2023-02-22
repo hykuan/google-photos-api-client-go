@@ -3,6 +3,7 @@ package gphotos
 import (
 	"context"
 	"net/http"
+	"time"
 
 	"github.com/hashicorp/go-retryablehttp"
 
@@ -47,6 +48,8 @@ func (c Client) UploadFileToAlbum(ctx context.Context, albumId string, filePath 
 func clientWithRetryPolicy(authenticatedClient *http.Client) *http.Client {
 	client := retryablehttp.NewClient()
 	client.CheckRetry = defaultGPhotosRetryPolicy
+	client.RetryMax = 9
+	client.RetryWaitMin = 5 * time.Second
 	client.Logger = nil // Disable DEBUG logs
 	client.HTTPClient = authenticatedClient
 	return client.StandardClient()
