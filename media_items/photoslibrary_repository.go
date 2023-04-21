@@ -111,7 +111,11 @@ func (r PhotosLibraryMediaItemsRepository) ListByAlbum(ctx context.Context, albu
 	}
 
 	if err := r.service.Search(req).Pages(ctx, appendResultsFn); err != nil {
-		return []MediaItem{}, err
+		mediaItems := make([]MediaItem, len(photosMediaItems))
+		for i, item := range photosMediaItems {
+			mediaItems[i] = toMediaItem(item)
+		}
+		return mediaItems, err
 	}
 
 	mediaItems := make([]MediaItem, len(photosMediaItems))
