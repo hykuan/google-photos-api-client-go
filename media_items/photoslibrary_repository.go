@@ -159,6 +159,36 @@ func toMediaItem(item *photoslibrary.MediaItem) MediaItem {
 			CreationTime: item.MediaMetadata.CreationTime,
 			Width:        strconv.FormatInt(item.MediaMetadata.Width, 10),
 			Height:       strconv.FormatInt(item.MediaMetadata.Height, 10),
+			Photo: func() *Photo {
+				if photo := item.MediaMetadata.Photo; photo == nil {
+					return nil
+				} else {
+					return &Photo{
+						ApertureFNumber: photo.ApertureFNumber,
+						CameraMake:      photo.CameraMake,
+						CameraModel:     photo.CameraModel,
+						ExposureTime:    photo.ExposureTime,
+						FocalLength:     photo.FocalLength,
+						IsoEquivalent:   photo.IsoEquivalent,
+						ForceSendFields: photo.ForceSendFields,
+						NullFields:      photo.NullFields,
+					}
+				}
+			}(),
+			Video: func() *Video {
+				if video := item.MediaMetadata.Video; video == nil {
+					return nil
+				} else {
+					return &Video{
+						CameraMake:      video.CameraMake,
+						CameraModel:     video.CameraModel,
+						Fps:             video.Fps,
+						Status:          video.Status,
+						ForceSendFields: video.ForceSendFields,
+						NullFields:      video.NullFields,
+					}
+				}
+			}(),
 		},
 		Filename: item.Filename,
 	}
