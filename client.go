@@ -48,8 +48,11 @@ func (c Client) UploadFileToAlbum(ctx context.Context, albumId string, filePath 
 func clientWithRetryPolicy(authenticatedClient *http.Client) *http.Client {
 	client := retryablehttp.NewClient()
 	client.CheckRetry = defaultGPhotosRetryPolicy
-	client.RetryMax = 9
-	client.RetryWaitMin = 5 * time.Second
+	// hack from document
+	// 429 errors can occur when your quota has been exausted or you are rate limited for making too many calls too quickly. Make sure you do not call batchCreate for the same user until the previous request has completed.
+	// 429 errors require a minimum 30s delay before retrying. Use an exponential backoff strategy when retrying requests.
+	client.RetryWaitMin = 30 * time.Second
+	client.RetryWaitMax = 60 * time.Second
 	client.Logger = nil // Disable DEBUG logs
 	client.HTTPClient = authenticatedClient
 	return client.StandardClient()
